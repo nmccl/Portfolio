@@ -65,7 +65,7 @@ body {
 
   opacity: 0;
 
-  bottom: 155px
+  bottom: 145px
 }
 
 .nav-link {
@@ -830,4 +830,5 @@ body {
     transition-duration: 0.1s !important;
   }
 }
+
 
