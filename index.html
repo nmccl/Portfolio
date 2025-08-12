@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Noah McClung - Developer</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css">
+   
   </head>
   <body>
     <div id="element"></div>
@@ -32,12 +33,23 @@
     </div>
     <div class="frame"></div>
 
+    <!-- Desktop Navigation -->
     <nav class="navbar">
       <a href="#about" class="nav-link active" data-section="about">About</a>
       <a href="#projects" class="nav-link" data-section="projects">Projects</a>
       <a href="#skills" class="nav-link" data-section="skills">Other Skills</a>
       <a href="#faqs" class="nav-link" data-section="faqs">FAQs</a>
       <div class="nav-indicator"></div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+      <div class="mobile-nav-content">
+        <a href="#about" class="mobile-nav-link active" data-section="about">About</a>
+        <a href="#projects" class="mobile-nav-link" data-section="projects">Projects</a>
+        <a href="#skills" class="mobile-nav-link" data-section="skills">Skills</a>
+        <a href="#faqs" class="mobile-nav-link" data-section="faqs">FAQs</a>
+      </div>
     </nav>
 
     <main>
@@ -90,7 +102,6 @@
             rel="noopener"
             >Read</a
           >
-            
           </div>
         </div>
       </section>
@@ -99,7 +110,7 @@
         <div class="section-content">
           <h2
             style="
-              font-size: clamp(2rem, 4vw, 3rem);
+              font-size: clamp(1.5rem, 5vw, 3rem);
               margin-bottom: 1rem;
               font-weight: 300;
             "
@@ -199,14 +210,13 @@
               </div>
             </div>
 
-
         </div>
       </section>
       <section id="skills" class="section">
         <div class="section-content">
           <h2
             style="
-              font-size: clamp(2rem, 4vw, 3rem);
+              font-size: clamp(1.5rem, 5vw, 3rem);
               margin-bottom: 1rem;
               font-weight: 300;
             "
@@ -238,17 +248,28 @@
         </div>
       </section>
       <section id="faqs" class="section">
-        <div class="questions">
-          <h3>How did you learn web development?</h3>
-          <h5>By reading books, taking online courses, and figuring it out on my own.</h5>
-          <h3>Do you have an associates degree or higher in computer science?</h3>
-          <h5>No, I do not.</h5> 
-          <h3>Did you make this portfolio?</h3>
-          <h5>Yes, It took 2 months.</h5>
-          <h3>What inspired you to get into development?</h3>
-          <h5>I've always found it exciting that with code, you can bring almost any idea to life. The ability to communicate directly with a computer and build something from nothing, is something I find both powerful and creatively fulfilling.</h5>
-          <h3>Do you understand AI and know how to use it?</h3>
-          <h5>I've built strong skills through practical work with ChatGPT and many other AI tools, giving me the ability to fufill your goal to an even higher extent.</h5>
+        <div class="section-content">
+          <h2
+            style="
+              font-size: clamp(1.5rem, 5vw, 3rem);
+              margin-bottom: 1rem;
+              font-weight: 300;
+            "
+          >
+            Frequently Asked Questions
+          </h2>
+          <div class="questions">
+            <h3>How did you learn web development?</h3>
+            <h5>By reading books, taking online courses, and figuring it out on my own.</h5>
+            <h3>Do you have an associates degree or higher in computer science?</h3>
+            <h5>No, I do not.</h5> 
+            <h3>Did you make this portfolio?</h3>
+            <h5>Yes, It took 2 months.</h5>
+            <h3>What inspired you to get into development?</h3>
+            <h5>I've always found it exciting that with code, you can bring almost any idea to life. The ability to communicate directly with a computer and build something from nothing, is something I find both powerful and creatively fulfilling.</h5>
+            <h3>Do you understand AI and know how to use it?</h3>
+            <h5>I've built strong skills through practical work with ChatGPT and many other AI tools, giving me the ability to fufill your goal to an even higher extent.</h5>
+          </div>
         </div>
       </section>
     </main>
@@ -258,6 +279,7 @@
         >noah_mcclung@icloud.com</a
       >
     </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
     <script>
@@ -275,8 +297,119 @@
           backgroundColor: 0x111111,
         });
       });
-    </script>
 
-    <script src="script.js"></script>
+      // Loading animation
+      setTimeout(() => {
+        document.getElementById('loading').classList.add('hidden');
+      }, 5500);
+
+      // Navigation functionality
+      const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+      const sections = document.querySelectorAll('.section');
+
+      function showSection(targetId) {
+        sections.forEach(section => {
+          section.classList.remove('active');
+        });
+        
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+          targetSection.classList.add('active');
+        }
+
+        // Update nav links
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+        });
+        
+        navLinks.forEach(link => {
+          if (link.dataset.section === targetId) {
+            link.classList.add('active');
+          }
+        });
+      }
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetSection = link.dataset.section;
+          showSection(targetSection);
+        });
+      });
+
+      // Touch/swipe support for mobile
+      let startX = null;
+      let startY = null;
+      const sections_array = ['about', 'projects', 'skills', 'faqs'];
+      let currentSectionIndex = 0;
+
+      document.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      });
+
+      document.addEventListener('touchend', (e) => {
+        if (!startX || !startY) return;
+        
+        const endX = e.changedTouches[0].clientX;
+        const endY = e.changedTouches[0].clientY;
+        
+        const diffX = startX - endX;
+        const diffY = startY - endY;
+        
+        // Only handle horizontal swipes that are more significant than vertical
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+          if (diffX > 0 && currentSectionIndex < sections_array.length - 1) {
+            // Swipe left - next section
+            currentSectionIndex++;
+            showSection(sections_array[currentSectionIndex]);
+          } else if (diffX < 0 && currentSectionIndex > 0) {
+            // Swipe right - previous section
+            currentSectionIndex--;
+            showSection(sections_array[currentSectionIndex]);
+          }
+        }
+        
+        startX = null;
+        startY = null;
+      });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' && currentSectionIndex < sections_array.length - 1) {
+          currentSectionIndex++;
+          showSection(sections_array[currentSectionIndex]);
+        } else if (e.key === 'ArrowLeft' && currentSectionIndex > 0) {
+          currentSectionIndex--;
+          showSection(sections_array[currentSectionIndex]);
+        }
+      });
+
+      // Update current section index when nav is clicked
+      navLinks.forEach((link, index) => {
+        link.addEventListener('click', () => {
+          const sectionName = link.dataset.section;
+          currentSectionIndex = sections_array.indexOf(sectionName);
+        });
+      });
+
+      // Smooth scrolling for mobile when content overflows
+      document.querySelectorAll('.projects-grid, .skills-grid, .questions').forEach(element => {
+        element.style.scrollBehavior = 'smooth';
+      });
+
+      // Handle orientation change
+      window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+          // Recalculate heights after orientation change
+          const vh = window.innerHeight * 0.01;
+          document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }, 100);
+      });
+
+      // Set initial viewport height for mobile
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    </script>
   </body>
 </html>
