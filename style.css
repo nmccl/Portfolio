@@ -666,6 +666,9 @@ body {
 
 /* Responsive breakpoints */
 @media (max-width: 768px) {
+  .html{
+    min-height: 100dvh;
+  }
   .navbar {
     display: none;
   }
