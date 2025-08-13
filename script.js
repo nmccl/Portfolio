@@ -237,6 +237,37 @@ function animate() {
   // Add any continuous animations here
   requestAnimationFrame(animate);
 }
+const mobileNavLinks = document.querySelectorAll(' .mobile-nav-link');
+
+function showSection(targetId) {
+  sections.forEach(section => {
+    section.classList.remove('active');
+  });
+  
+  const targetSection = document.getElementById(targetId);
+  if (targetSection) {
+    targetSection.classList.add('active');
+  }
+
+  // Update nav links
+  mobileNavLinks.forEach(link => {
+    link.classList.remove('active');
+  });
+  
+  mobileNavLinks.forEach(link => {
+    if (link.dataset.section === targetId) {
+      link.classList.add('active');
+    }
+  });
+}
+
+  mobileNavLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetSection = link.dataset.section;
+    showSection(targetSection);
+  });
+});
 animate();
 
 // Food diary

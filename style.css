@@ -50,6 +50,7 @@ body {
   position: absolute;
 
   left: -16px;
+  top: 14px;
 
   width: 0;
 
@@ -686,7 +687,20 @@ body {
   .section-content {
     margin-top: 0;
   }
-  
+  .description{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+  .role{
+    text-align: center;
+  }
+  .section-content h1{
+    text-align: center;
+  }
+  .section-content h2{
+    text-align: center;
+  }
   .contact {
     bottom: 90px;
   }
