@@ -1,278 +1,147 @@
-// Enhanced loading screen with multiple effects
-window.addEventListener("load", () => {
-  // Simulate loading time for dramatic effect
-  setTimeout(() => {
-    document.getElementById("loading").classList.add("hidden");
+     // Initialize Vanta background
+        window.addEventListener("DOMContentLoaded", function () {
+            try {
+                VANTA.NET({
+                    el: "#element",
+                    mouseControls: true,
+                    touchControls: true,
+                    gyroControls: false,
+                    minHeight: 200.0,
+                    minWidth: 200.0,
+                    scale: 1.0,
+                    scaleMobile: 1.0,
+                    color: 0xffffff,
+                    backgroundColor: 0x111111,
+                });
+            } catch (e) {
+                console.log("Vanta initialization failed:", e);
+            }
+        });
 
-    // Trigger entrance animations for main content
-    setTimeout(() => {
-      document.querySelector(
-        ".section.active .section-content"
-      ).style.animation = "slideIn 1s ease-out";
-    }, 300);
-  }, 5500); // 5.5 seconds total loading time
-});
+        // Loading screen with skip functionality
+        const loadingScreen = document.getElementById('loading');
+        const skipButton = document.getElementById('skipIntro');
+        let loadingTimeout;
 
-// Create particle explosion effect (optional enhancement)
-function createParticleExplosion() {
-  const particles = document.createElement("div");
-  particles.className = "loading-particles";
-
-  for (let i = 0; i < 50; i++) {
-    const particle = document.createElement("div");
-    particle.className = "particle";
-
-    const angle = (Math.PI * 2 * i) / 50;
-    const distance = 150 + Math.random() * 100;
-    const dx = Math.cos(angle) * distance;
-    const dy = Math.sin(angle) * distance;
-
-    particle.style.setProperty("--dx", dx + "px");
-    particle.style.setProperty("--dy", dy + "px");
-    particle.style.left = "50%";
-    particle.style.top = "50%";
-    particle.style.animationDelay = Math.random() * 2 + "s";
-
-    particles.appendChild(particle);
-  }
-
-  document.getElementById("loading").appendChild(particles);
-}
-
-// Create matrix-like effect (optional)
-function createMatrixEffect() {
-  const matrix = document.createElement("div");
-  matrix.className = "loading-matrix";
-
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</>{}[];:";
-
-  for (let i = 0; i < 20; i++) {
-    const column = document.createElement("div");
-    column.className = "matrix-column";
-
-    let columnText = "";
-    for (let j = 0; j < 20; j++) {
-      columnText += characters.charAt(
-        Math.floor(Math.random() * characters.length)
-      );
-    }
-
-    column.textContent = columnText;
-    column.style.left = Math.random() * 100 + "%";
-    column.style.animationDelay = Math.random() * 4 + "s";
-    column.style.animationDuration = 2 + Math.random() * 3 + "s";
-
-    matrix.appendChild(column);
-  }
-
-  document.getElementById("loading").appendChild(matrix);
-}
-
- //Audio feedback (optional - uncomment to add sound)
-
-        function playLoadingSound() {
-            // Create a simple beep sound using Web Audio API
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
+        function hideLoading() {
+            loadingScreen.classList.add('hidden');
+            clearTimeout(loadingTimeout);
             
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.5);
+            // Trigger entrance animations
+            setTimeout(() => {
+                const activeContent = document.querySelector('.section.active .section-content');
+                if (activeContent) {
+                    activeContent.style.animation = 'slideIn 1s ease-out';
+                }
+            }, 300);
         }
-        
 
-// Generate wireframe background
-function createWireframe() {
-  const wireframe = document.getElementById("wireframe");
-  const lines = 50;
+        // Skip button functionality
+        skipButton.addEventListener('click', hideLoading);
 
-  for (let i = 0; i < lines; i++) {
-    const line = document.createElement("div");
-    line.className = "line";
+        // Auto-hide after 5.5 seconds
+        window.addEventListener('load', () => {
+            loadingTimeout = setTimeout(hideLoading, 5500);
+        });
 
-    const isHorizontal = Math.random() > 0.5;
-    const position = Math.random() * 100;
-    const length = Math.random() * 40 + 20;
+        // Navigation functionality
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+        const sections = document.querySelectorAll('.section');
+        const indicator = document.querySelector('.nav-indicator');
 
-    if (isHorizontal) {
-      line.style.height = "1px";
-      line.style.width = length + "%";
-      line.style.top = position + "%";
-      line.style.left = Math.random() * (100 - length) + "%";
-    } else {
-      line.style.width = "1px";
-      line.style.height = length + "%";
-      line.style.left = position + "%";
-      line.style.top = Math.random() * (100 - length) + "%";
-    }
+        function updateIndicator(activeLink) {
+            if (!activeLink || !indicator) return;
+            const linkRect = activeLink.getBoundingClientRect();
+            const navRect = activeLink.closest('.navbar').getBoundingClientRect();
+            const offset = linkRect.top - navRect.top + linkRect.height / 2 - 8;
+            indicator.style.top = offset + 'px';
+        }
 
-    line.style.animationDelay = Math.random() * 4 + "s";
-    wireframe.appendChild(line);
-  }
-}
+        function showSection(targetId) {
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
 
-window.addEventListener("resize", () => location.reload());
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
 
-// Navigation functionality
-const navLinks = document.querySelectorAll(".nav-link");
-const sections = document.querySelectorAll(".section");
-const indicator = document.querySelector(".nav-indicator");
+            // Update desktop nav
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.section === targetId) {
+                    link.classList.add('active');
+                    updateIndicator(link);
+                }
+            });
 
-function updateIndicator(activeLink) {
-  const linkRect = activeLink.getBoundingClientRect();
-  const navRect = activeLink.closest(".navbar").getBoundingClientRect();
-  const offset = linkRect.top - navRect.top + linkRect.height / 2 - 8;
-  indicator.style.top = offset + "px";
-}
-function fixIndicator(activeLink) {
-  
-}
-function showSection(targetId) {
-  sections.forEach((section) => {
-    section.classList.remove("active");
-  });
+            // Update mobile nav
+            mobileNavLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.section === targetId) {
+                    link.classList.add('active');
+                }
+            });
+        }
 
-  const targetSection = document.getElementById(targetId);
-  if (targetSection) {
-    targetSection.classList.add("active");
-  }
-}
+        // Desktop nav click handlers
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetSection = link.getAttribute('data-section');
+                showSection(targetSection);
+                history.pushState(null, null, `#${targetSection}`);
+            });
+        });
 
-navLinks.forEach((link) => {
-  link.addEventListener("click", (e) => {
-    e.preventDefault();
-    const targetSection = link.getAttribute("data-section");
+        // Mobile nav click handlers
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetSection = link.getAttribute('data-section');
+                showSection(targetSection);
+                history.pushState(null, null, `#${targetSection}`);
+            });
+        });
 
-    // Update active states
-    navLinks.forEach((l) => l.classList.remove("active"));
-    link.classList.add("active");
+        // Handle browser back/forward
+        window.addEventListener('popstate', () => {
+            const hash = window.location.hash.substring(1) || 'about';
+            showSection(hash);
+        });
 
-    // Update indicator
-    updateIndicator(link);
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialHash = window.location.hash.substring(1) || 'about';
+            showSection(initialHash);
+        });
 
-    // Show section
-    showSection(targetSection);
+        // Update indicator on resize
+        window.addEventListener('resize', () => {
+            const activeLink = document.querySelector('.nav-link.active');
+            if (activeLink) {
+                updateIndicator(activeLink);
+            }
+        });
 
-    // Update URL without reload
-    history.pushState(null, null, `#${targetSection}`);
-  });
-});
+        // Prevent double-tap zoom on iOS
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
 
-// Handle browser back/forward
-window.addEventListener("popstate", () => {
-  const hash = window.location.hash.substring(1) || "about";
-  const targetLink = document.querySelector(`[data-section="${hash}"]`);
+        // Handle viewport height changes on mobile (keyboard, etc.)
+        function setViewportHeight() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
 
-  if (targetLink) {
-    navLinks.forEach((l) => l.classList.remove("active"));
-    targetLink.classList.add("active");
-    updateIndicator(targetLink);
-    showSection(hash);
-  }
-});
-
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-  anchor.addEventListener("click", function (e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute("href"));
-    if (target) {
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  });
-});
-
-// Initialize
-document.addEventListener("DOMContentLoaded", () => {
-  createWireframe();
-
-  // Add optional loading effects
-  // createParticleExplosion(); // Uncomment for particle explosion
-  // createMatrixEffect(); // Uncomment for matrix rain effect
-  // playLoadingSound(); // Uncomment for audio feedback
-
-  // Handle initial hash and set up default state
-  const initialHash = window.location.hash.substring(1) || "about";
-  
-  // Ensure the correct section is active
-  showSection(initialHash);
-  
-  // Update navigation active states
-  navLinks.forEach((l) => l.classList.remove("active"));
-  const targetLink = document.querySelector(`[data-section="${initialHash}"]`);
-  if (targetLink) {
-    targetLink.classList.add("active");
-    updateIndicator(targetLink);
-  }
-});
-
-// Resize handler
-window.addEventListener("resize", () => {
-  const activeLink = document.querySelector(".nav-link.active");
-  if (activeLink) {
-    updateIndicator(activeLink);
-  }
-});
-
-// Add some interactive particles on mouse move
-let mouseX = 0,
-  mouseY = 0;
-document.addEventListener("mousemove", (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
-
-// Performance optimization: use requestAnimationFrame for smooth animations
-function animate() {
-  // Add any continuous animations here
-  requestAnimationFrame(animate);
-}
-const mobileNavLinks = document.querySelectorAll(' .mobile-nav-link');
-
-function showSection(targetId) {
-  sections.forEach(section => {
-    section.classList.remove('active');
-  });
-  
-  const targetSection = document.getElementById(targetId);
-  if (targetSection) {
-    targetSection.classList.add('active');
-  }
-
-  // Update nav links
-  mobileNavLinks.forEach(link => {
-    link.classList.remove('active');
-  });
-  
-  mobileNavLinks.forEach(link => {
-    if (link.dataset.section === targetId) {
-      link.classList.add('active');
-    }
-  });
-}
-
-  mobileNavLinks.forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const targetSection = link.dataset.section;
-    showSection(targetSection);
-  });
-});
-animate();
-
-// Food diary
-// Note section for each day
-// local storage to save data
-// Be able to note breakfast, lunch, dinner, snacks, Drinks, Vitamins/Supplements
-// Date for each added
-//
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
+        window.addEventListener('orientationchange', setViewportHeight);
