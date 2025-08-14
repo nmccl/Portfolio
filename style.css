@@ -714,7 +714,9 @@
             .section-content {
                 margin-top: 20px;
             }
-            
+            .section-content h2{
+              text-align: center;
+            }
             .about-content h1 {
                 text-align: center;
             }
